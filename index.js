@@ -108,7 +108,7 @@ _.first = function(arr, val){
 *   _.last(["a", "b", "c"], 1) -> "c"
 *   _.last(["a", "b", "c"], 2) -> ["b", "c"]
 */
-_.last = function (array , number){
+/*_.last = function (array , number){
     let arr = [];
     if(Array.isArray !== array){
         return arr;
@@ -116,8 +116,21 @@ _.last = function (array , number){
         
     }
     
-}
-
+}*/
+_.last = function(arr,num){
+    var e = [];
+    if(_.typeOf(arr)!== 'array'){
+        return [];
+    }else if (_.typeOf(num)!== 'number'){
+        return arr[arr.length-1];
+    }else if(num >arr.length){
+        return arr;
+    }else{
+        for(var i=arr.length-num; i<=arr.length-1;i++)
+        e.push(arr[i]);
+    }
+    return e;
+};
 /** _.indexOf
 * Arguments:
 *   1) An array
@@ -243,9 +256,15 @@ return arr;
 * Examples:
 *   _.map([1,2,3,4], function(e){return e * 2}) -> [2,4,6,8]
 */
-_.map = function(collection, fn){
-    
-}
+_.map = function(coll, fn){
+    var res = [];
+    _.each(coll, function(elt, loc, coll){
+        res.push(fn(elt, loc, coll));
+    });
+    return res;
+};
+
+
 
 /** _.reject
 * Arguments:
@@ -259,6 +278,17 @@ _.map = function(collection, fn){
 * Examples:
 *   _.reject([1,2,3,4,5], function(e){return e%2 === 0}) -> [1,3,5]
 */
+_.reject = function(arr, fn){
+    var res = [];
+    _.each(arr, function(elt, loc, coll){
+        if(!fn(elt,loc,coll)){
+            res.push(elt);
+        }
+    });
+    return res;
+};
+
+    
 
 
 /** _.partition
@@ -279,7 +309,13 @@ _.map = function(collection, fn){
 *   }); -> [[2,4],[1,3,5]]
 }
 */
+_.partition = function(col, fn){
+   var res = [];
+   res.push(_.filter(col, fn));
+   res.push(_.reject(col, fn));
+   return res;
 
+};
 
 /** _.every
 * Arguments:
@@ -301,7 +337,7 @@ _.map = function(collection, fn){
 *   _.every([2,4,6], function(e){return e % 2 === 0}) -> true
 *   _.every([1,2,3], function(e){return e % 2 === 0}) -> false
 */
-_.every = function(collection, test){
+/*_.every = function(collection, test){
     
    /* var allTrue = true;
 
@@ -316,8 +352,7 @@ _.every = function(collection, test){
     );
     
     return allTrue;
-    };*/
-    
+    };
         if(Array.isArray(collection)) {
         for( let i = 0; i < collection.length; i++){
                 if (!test(collection[i], i,  collection)){
@@ -334,8 +369,28 @@ _.every = function(collection, test){
         }
         return true;
     }
+};*/
+   _.every = function(col, test){
+    if(!test){
+        var bool = true;
+        _.each(col,function(val){
+            if(!val){
+                bool = false;
+            }
+        })
+        return bool;
+    }else{
+        var allTrue = true;
+        _.each(col, function(value, loc, col){
+            if(!test(value, loc, col)){
+                allTrue = false;
+            }
+        
+        });
+    }
+    
+    return allTrue;
 };
-   
 
 /** _.some
 * Arguments:
@@ -357,7 +412,28 @@ _.every = function(collection, test){
 *   _.some([1,3,5], function(e){return e % 2 === 0}) -> false
 *   _.some([1,2,3], function(e){return e % 2 === 0}) -> true
 */
-
+_.some = function(col, fn){
+    var oneTrue = false;
+    if(!fn){
+        _.each(col,function(val){
+            if(!val){
+                oneTrue = false;
+            }else{
+                oneTrue = true;
+            }
+        });
+        return oneTrue;
+    }else{
+        _.each(col, function(value, loc, col){
+        if(fn(value, loc, col)){
+            oneTrue = true;
+        }
+        
+    });
+    }
+    
+    return oneTrue;
+};
 
 /** _.pluck
 * Arguments:
@@ -369,7 +445,15 @@ _.every = function(collection, test){
 * Examples:
 *   _.pluck([{a: "one"}, {a: "two"}], "a") -> ["one", "two"]
 */
-
+_.pluck = function(arr, prop){
+  var newArr = [];
+  for (var i = 0;i < arr.length; i++){
+    if (arr[i].hasOwnProperty(prop)){
+      newArr.push(arr[i][prop]);
+    }
+  }
+  return newArr;
+};
 
 //////////////////////////////////////////////////////////////////////
 // DON'T REMOVE THIS CODE ////////////////////////////////////////////
